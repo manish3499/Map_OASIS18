@@ -1,7 +1,10 @@
 package com.example.android.map;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,9 +43,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         mMap.clear();
-        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.style_retro_json));
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_retro_json));
 
-        // Add a marker in Sydney and move the camera
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            //TODO: Handle location permission
+        }
+
+
+        // Add a marker in Rotunda and move the camera
         LatLng rotunda = new LatLng(28.3633546, 75.5871163);
         mMap.addMarker(new MarkerOptions().position(rotunda).title("BITS Rotunda")).showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rotunda, 17.0f));
